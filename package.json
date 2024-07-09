@@ -13,8 +13,8 @@
   "main": "./extension.js",
   "contributes": {
     "commands": [{
-      "command": "auto-config-env.helloWorld",
-      "title": "Hello World"
+      "command": "extension.runCondaCommand",
+      "title": "Auto Config Python Environment"
     }]
   },
   "scripts": {

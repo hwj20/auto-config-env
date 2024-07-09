@@ -1,36 +1,51 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
-
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+const fs = require('fs');
+const path = require('path');
+const { exec } = require('child_process');
 
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
+    console.log('Congratulations, your extension "auto-conda-runner" is now active!');
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "auto-config-env" is now active!');
+    // Register a command to run the conda command
+    let disposable = vscode.commands.registerCommand('extension.runCondaCommand', function () {
+        const folders = vscode.workspace.workspaceFolders;
+        if (folders) {
+            const folderPath = folders[0].uri.fsPath;
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('auto-config-env.helloWorld', function () {
-		// The code you place here will be executed every time your command is executed
+            // Read folder contents
+            fs.readdir(folderPath, (err, files) => {
+                if (err) {
+                    vscode.window.showErrorMessage('Failed to read folder contents');
+                    return;
+                }
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from auto_config_env!');
-	});
+                // Example: Print the files
+                console.log('Files in the folder:', files);
 
-	context.subscriptions.push(disposable);
+                // Run a Conda command
+                const condaCommand = 'conda list'; // Replace with your conda command
+                exec(condaCommand, (err, stdout, stderr) => {
+                    if (err) {
+                        vscode.window.showErrorMessage(`Conda command failed: ${stderr}`);
+                        return;
+                    }
+                    vscode.window.showInformationMessage(`Conda command output: ${stdout}`);
+                });
+            });
+        } else {
+            vscode.window.showErrorMessage('No folder is open');
+        }
+    });
+
+    context.subscriptions.push(disposable);
 }
 
-// This method is called when your extension is deactivated
 function deactivate() {}
 
 module.exports = {
-	activate,
-	deactivate
-}
+    activate,
+    deactivate
+};
