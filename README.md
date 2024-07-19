@@ -1,10 +1,8 @@
 # auto-config-env README
 
 ## TODOList:
-a: Function 1
-1. 3 command + add loop
-2. debug command
-3. 3 buttons
+1. debug
+2. revise UI
 
 
 
