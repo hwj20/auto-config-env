@@ -16,8 +16,34 @@
       {
         "command": "extension.runPythonAndHandleErrors",
         "title": "Run Python and Handle Errors"
+      },
+      {
+          "command": "extension.completeImports",
+          "title": "Complete Imports"
+      },
+      {
+        "command": "extension.generateRequirements",
+        "title": "Genearte Requirements"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "SidebarAutoRun",
+          "title": "Auto Config",
+          "icon": "resources/heart.png"
+        }
+      ]
+    },
+    "views": {
+      "SidebarAutoRun": [
+        {
+          "type": "webview",
+          "id": "view.autorun",
+          "name": "Auto Run Script"
+        }
+      ]
+    }
   },
   "scripts": {
     "lint": "eslint .",
@@ -34,6 +60,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "axios": "^1.7.2"
+    "axios": "^1.7.2",
+    "openai": "^4.52.7"
   }
 }

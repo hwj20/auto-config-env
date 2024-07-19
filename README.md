@@ -1,5 +1,13 @@
 # auto-config-env README
 
+## TODOList:
+a: Function 1
+1. 3 command + add loop
+2. debug command
+3. 3 buttons
+
+
+
 This is the README for your extension "auto-config-env". After writing up a brief description, we recommend including the following sections.
 
 ## Features

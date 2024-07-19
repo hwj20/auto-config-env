@@ -1,66 +1,84 @@
 const vscode = require('vscode');
-const { exec } = require('child_process');
-const axios = require('axios');
-
-function runPythonFile() {
-    return new Promise((resolve, reject) => {
-        exec('python3 script.py', (error, stdout, stderr) => {
-            if (error) {
-                reject(stderr);
-            } else {
-                resolve(stdout);
-            }
-        });
-    });
-}
-
-async function handleError(error) {
-    try {
-        const response = await axios.post('https://your-server-url.com/error', { error });
-        return response.data.command;
-    } catch (err) {
-        vscode.window.showErrorMessage('Error sending error to server: ' + err);
-        throw err;
-    }
-}
-
-function runCommand(command) {
-    return new Promise((resolve, reject) => {
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                reject(stderr);
-            } else {
-                resolve(stdout);
-            }
-        });
-    });
-}
+const {executeRunPythonAndHandleErrors,testpython} = require('./utils/runPythonFileUtils')
+const {generateRequirements} = require('./utils/createRequirementUtils')
+const {completeImports} = require('./utils/addImportsUtils')
 
 function activate(context) {
-    console.log('Congratulations, your extension "auto-conda-runner" is now active!');
-    let disposable = vscode.commands.registerCommand('extension.runPythonAndHandleErrors', async () => {
-        try {
-            await runPythonFile();
-            vscode.window.showInformationMessage('Python script ran successfully.');
-        } catch (error) {
-            vscode.window.showErrorMessage('Error running Python script: ' + error);
-            try {
-                const command = await handleError(error);
-                vscode.window.showInformationMessage('Received command from server: ' + command);
-                const output = await runCommand(command);
-                vscode.window.showInformationMessage('Command output: ' + output);
-            } catch (err) {
-                vscode.window.showErrorMessage('Error handling command: ' + err);
-            }
-        }
+    let disposableRunPython = vscode.commands.registerCommand('extension.runPythonAndHandleErrors', () => {
+        executeRunPythonAndHandleErrors(3,"base"); // 设置循环次数为3次
+        // testpython();
     });
 
-    context.subscriptions.push(disposable);
+    let disposableCompleteImports = vscode.commands.registerCommand('extension.completeImports', completeImports);
+
+    let disposableGenerateRequirements = vscode.commands.registerCommand('extension.generateRequirements', generateRequirements);
+
+    context.subscriptions.push(disposableRunPython);
+    context.subscriptions.push(disposableCompleteImports);
+    context.subscriptions.push(disposableGenerateRequirements);
+
+    const myProvider = {
+        resolveWebviewView(webviewView) {
+            webviewView.webview.options = {
+                enableScripts: true,
+            };
+
+            webviewView.webview.html = getWebviewContent();
+
+            webviewView.webview.onDidReceiveMessage((message) => {
+                switch (message.command) {
+                    case 'runScript':
+                        vscode.commands.executeCommand('extension.runPythonAndHandleErrors');
+                        return;
+                    case 'completeImports':
+                        vscode.commands.executeCommand('extension.completeImports');
+                        return;
+                    case 'generateRequirements':
+                        vscode.commands.executeCommand('extension.generateRequirements');
+                        return;
+                }
+            });
+        }
+    };
+
+    context.subscriptions.push(
+        vscode.window.registerWebviewViewProvider('view.autorun', myProvider)
+    );
+}
+
+function getWebviewContent() {
+    return `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Run Script</title>
+        </head>
+        <body>
+            <button onclick="runScript()">Run Python Script</button>
+            <button onclick="completeImports()">Complete Imports</button>
+            <button onclick="generateRequirements()">Generate requirements.txt</button>
+            <script>
+                const vscode = acquireVsCodeApi();
+                function runScript() {
+                    vscode.postMessage({ command: 'runScript' });
+                }
+                function completeImports() {
+                    vscode.postMessage({ command: 'completeImports' });
+                }
+                function generateRequirements() {
+                    vscode.postMessage({ command: 'generateRequirements' });
+                }
+            </script>
+        </body>
+        </html>
+    `;
 }
 
 function deactivate() {}
 
 module.exports = {
     activate,
-    deactivate
+    deactivate,
 };
