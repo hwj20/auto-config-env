@@ -1,12 +1,11 @@
 # auto-config-env README
 
 ## TODOList:
-1. debug
-2. revise UI
+1. revise prompt
+2. add conda control ui
 
 
 
-This is the README for your extension "auto-config-env". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 
@@ -18,9 +17,25 @@ For example if there is an image subfolder under your extension project workspac
 
 > Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
-## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+
+## Requirements
+- OpenAI key
+- Conda
+
+## Configuration
+Add a `.autoconfig-config` file in the root directory with the following content in JSON format:
+
+```json
+{
+    "api_key": "Your OpenAI Key"
+}
+```
+
+## Notes
+- The extension has not been tested on Windows.
+
+
 
 ## Extension Settings
 

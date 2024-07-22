@@ -86,6 +86,7 @@ function getWebviewContent(condaEnvironments) {
             <button onclick="runScript()" class="full-width-button">Run Python Script</button>
             <button onclick="completeImports()" class="full-width-button">Complete Imports</button>
             <button onclick="generateRequirements()" class="full-width-button">Generate requirements.txt</button>
+            <!--  <button onclick="addNewCondaEnv(" class="full-width-button">Add new CondaEnv</button> -->
             <script>
                 const vscode = acquireVsCodeApi();
                 function runScript() {
