@@ -1,9 +1,9 @@
 const { OpenAI } = require('openai');
 const { exec } = require('child_process');
 const vscode = require('vscode');
-const config = require('../config.json')
+const {loadConfig} = require('./configUtils')
 
-
+config = loadConfig();
 const openai = new OpenAI({
   apiKey:  config.api_key,
 });
@@ -90,6 +90,7 @@ async function executeRunPythonAndHandleErrors(maxRetries = 3,condaEnv) {
         }
     }
 }
+
 async function testpython(){
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -110,8 +111,24 @@ async function testpython(){
             vscode.window.showErrorMessage(`failed: ${error}`);
         }
 }
-
+async function getCondaEnvironments() {
+    return new Promise((resolve, reject) => {
+        exec('conda env list', (error, stdout, stderr) => {
+            if (error) {
+                reject(stderr);
+            } else {
+                const envs = stdout.split('\n')
+                    .filter(line => line.includes(' '))  // Filter lines with spaces
+                    .map(line => line.split(' ')[0])     // Get the environment name
+                    .filter(element => !element.includes("#")) // Remove #
+                    .filter(env => env);                 // Remove empty lines
+                resolve(envs);
+            }
+        });
+    });
+}
 module.exports = {
     executeRunPythonAndHandleErrors,
-    testpython
+    testpython,
+    getCondaEnvironments
 }

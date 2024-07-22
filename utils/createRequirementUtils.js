@@ -1,10 +1,10 @@
 const vscode = require('vscode');
+const { OpenAI } = require('openai');
+const {loadConfig} = require('./configUtils')
 const fs = require('fs');
 const path = require('path');
-const { OpenAI } = require('openai');
-const config = require('../config.json')
 
-
+config = loadConfig();
 const openai = new OpenAI({
   apiKey:  config.api_key,
 });
