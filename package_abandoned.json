@@ -26,7 +26,24 @@
         "title": "Genearte Requirements.txt"
       }
     ],
-    
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "SidebarAutoRun",
+          "title": "Auto Config",
+          "icon": "resources/image-white.png"
+        }
+      ]
+    },
+    "views": {
+      "SidebarAutoRun": [
+        {
+          "type": "webview",
+          "id": "view.autorun",
+          "name": "Auto Run Script"
+        }
+      ]
+    },
       "menus": {
         "editor/title": [
             {

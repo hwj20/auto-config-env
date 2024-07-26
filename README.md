@@ -33,7 +33,7 @@ Add a `.autoconfig-config` file in the root directory with the following content
 ```
 
 ## Notes
-- The extension has not been tested on Windows.
+- The extension has not been tested on Windows, because the path of Python interperter in Windows is magical and so does it in conda envs.
 
 
 

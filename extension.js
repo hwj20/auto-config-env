@@ -3,15 +3,32 @@ const {executeRunPythonAndHandleErrors,testpython,getCondaEnvironments} = requir
 const {generateRequirements} = require('./utils/createRequirementUtils')
 const {completeImports} = require('./utils/addImportsUtils')
 
+async function selectCondaEnv() {
+    const condaEnvironments = await getCondaEnvironments();
+    const selectedEnv = await vscode.window.showQuickPick(condaEnvironments, {
+        placeHolder: 'Select Conda Environment',
+    });
+    return selectedEnv || 'base';
+}
+
+
 async function activate(context) {
-    let disposableRunPython = vscode.commands.registerCommand('extension.runPythonAndHandleErrors', async(condaEnv) => {
+    let disposableRunPython = vscode.commands.registerCommand('extension.runPythonAndHandleErrors', async() => {
+        condaEnv = await selectCondaEnv();
         executeRunPythonAndHandleErrors(3,condaEnv); // 设置循环次数为3次
         // testpython();
     });
 
     let disposableCompleteImports = vscode.commands.registerCommand('extension.completeImports', completeImports);
 
-    let disposableGenerateRequirements = vscode.commands.registerCommand('extension.generateRequirements', generateRequirements);
+    let disposableGenerateRequirements = vscode.commands.registerCommand('extension.generateRequirements', async (uri) => {
+        if (uri) {
+            const folderPath = uri.fsPath;
+            await generateRequirements(folderPath);
+        } else {
+            vscode.window.showErrorMessage('No folder selected');
+        }
+    });
      
 
     context.subscriptions.push(disposableRunPython);
@@ -47,9 +64,9 @@ async function activate(context) {
         }
     };
 
-    context.subscriptions.push(
-        vscode.window.registerWebviewViewProvider('view.autorun', myProvider)
-    );
+    // context.subscriptions.push(
+    //     vscode.window.registerWebviewViewProvider('view.autorun', myProvider)
+    // );
 }
 
 

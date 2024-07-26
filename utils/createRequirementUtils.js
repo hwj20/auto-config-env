@@ -25,14 +25,14 @@ function getAllPythonFiles(dirPath, arrayOfFiles) {
     return arrayOfFiles;
 }
 
-async function generateRequirements() {
+async function generateRequirements(dirPath) {
     const folder = vscode.workspace.workspaceFolders;
     if (!folder) {
         vscode.window.showErrorMessage('No workspace folder found');
         return;
     }
 
-    const dirPath = folder[0].uri.fsPath;
+    // const dirPath = folder[0].uri.fsPath;
     const pythonFiles = getAllPythonFiles(dirPath);
 
     if (pythonFiles.length === 0) {
