@@ -2,7 +2,6 @@
 
 ## TODOList:
 1. revise prompt
-2. add conda control ui
 
 
 

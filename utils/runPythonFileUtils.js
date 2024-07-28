@@ -22,9 +22,9 @@ function runPythonFile(filePath,condaEnv="base") {
 
 async function handleError(error) {
     try {
-        const prompt_get_cmd = "As an experienced Python programming expert, highly skilled at solving programming environment configuration issues, please provide a solution in Ubuntu system for the given programming environment configuration problem.\
-         Note: sudo command cannot be used.The given programming environment configuration problem is: {question}Please write programming commands that can solve the above problems. \
-         Respond only with a string in the following JSON format:{{\"commands\": output string}}"+error;
+        const prompt_get_cmd = `As an experienced Python programming expert, highly skilled at solving programming environment configuration issues, please provide a solution in Ubuntu system for the given programming environment configuration problem.\
+         Note: sudo command cannot be used.The given programming environment configuration problem is: ${error}Please write programming commands that can solve the above problems. \
+         Respond only with a string in the following JSON format:{{\"commands\": output string}}`;
         const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo-1106', // 或 'gpt-4' 如果你有访问权限
             messages: [{role: "user", content: prompt_get_cmd}],

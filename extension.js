@@ -4,12 +4,14 @@ const {generateRequirements} = require('./utils/createRequirementUtils')
 const {completeImports} = require('./utils/addImportsUtils')
 
 let selectedCondaEnv = 'base';
+let selectedPythonVersion = '';
 let statusBarItem;
 let isPythonVersionValid = false;
 
 async function updateStatusBar() {
     try{
         const pythonVersion = await getPythonVersion(selectedCondaEnv);
+        selectedPythonVersion = pythonVersion;
         statusBarItem.text = `$(database) ${selectedCondaEnv} (Python ${pythonVersion})`;
         statusBarItem.show();
         isPythonVersionValid = true;
