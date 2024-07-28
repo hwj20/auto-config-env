@@ -64,7 +64,7 @@ async function generateRequirements(dirPath, pythonVersion) {
     }
     const prompt_get_requirements = `As an experienced Python programming expert proficient in solving programming environment configuration issues, please help me set up a specified programming environment on an Ubuntu system. I have lost the Python project's requirements.txt file but can provide the content of all Python files in the project as strings. Based on the import statements and other possible clues in these files, help me identify the external libraries the project depends on and create a requirements.txt file that will allow the project to run smoothly. Please try to identify and provide specific library version requirements; if it's not possible to determine the exact versions, at least provide the names of the libraries. Note that Python's standard library is pre-installed, so there's no need to list modules from the standard library. Here is the content of my project files:${combinedContent} \
 Respond only with a string in the following JSON format: \
-{{\"requirement\": output string(without version)}}`;
+{\"requirement\": output string(without version)}`;
 // `The python version is ${pythonVersion}`;
 
     try {

@@ -24,7 +24,7 @@ async function completeImports() {
     const fileContent = document.getText();
     const prompt_get_imports = `As an experienced Python programming expert specializing in resolving programming environment configuration issues, I've encountered a situation where the initial import statements in a Python file have been lost. The remaining content of the Python file is provided to you as a string. Your task is to deduce and compose the necessary import statements required for the successful execution of the file based on the clues within the remaining content. Here is the content of my Python file: ${fileContent} \
 Respond only with a string in the following JSON format: \
-{{\"import_statements\": output string}}`
+{\"import_statements\": output string}`
 
     try {
         const response = await openai.chat.completions.create({
