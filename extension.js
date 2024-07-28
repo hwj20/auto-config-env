@@ -1,22 +1,55 @@
 const vscode = require('vscode');
-const {executeRunPythonAndHandleErrors,testpython,getCondaEnvironments} = require('./utils/runPythonFileUtils')
+const {executeRunPythonAndHandleErrors,testpython,getCondaEnvironments,getPythonVersion} = require('./utils/runPythonFileUtils')
 const {generateRequirements} = require('./utils/createRequirementUtils')
 const {completeImports} = require('./utils/addImportsUtils')
+
+let selectedCondaEnv = 'base';
+let statusBarItem;
+let isPythonVersionValid = false;
+
+async function updateStatusBar() {
+    try{
+        const pythonVersion = await getPythonVersion(selectedCondaEnv);
+        statusBarItem.text = `$(database) ${selectedCondaEnv} (Python ${pythonVersion})`;
+        statusBarItem.show();
+        isPythonVersionValid = true;
+    }catch(error){
+        statusBarItem.text = `$(database) ${selectedCondaEnv} (Python version not found)`;
+        statusBarItem.show();
+        isPythonVersionValid = false;
+    }
+}
+
 
 async function selectCondaEnv() {
     const condaEnvironments = await getCondaEnvironments();
     const selectedEnv = await vscode.window.showQuickPick(condaEnvironments, {
         placeHolder: 'Select Conda Environment',
     });
-    return selectedEnv || 'base';
+    if (selectedEnv) {
+        selectedCondaEnv = selectedEnv;
+        updateStatusBar();
+    }
 }
 
 
 async function activate(context) {
+    await selectCondaEnv();
+    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    statusBarItem.command = 'extension.selectCondaEnv';
+    context.subscriptions.push(statusBarItem);
+    await updateStatusBar();
+
+    let disposableSelectCondaEnv = vscode.commands.registerCommand('extension.selectCondaEnv', selectCondaEnv);
+    context.subscriptions.push(disposableSelectCondaEnv);
+
+
     let disposableRunPython = vscode.commands.registerCommand('extension.runPythonAndHandleErrors', async() => {
-        condaEnv = await selectCondaEnv();
-        executeRunPythonAndHandleErrors(3,condaEnv); // 设置循环次数为3次
-        // testpython();
+        if (isPythonVersionValid) {
+            await executeRunPythonAndHandleErrors(3, selectedCondaEnv); // 设置循环次数为3次，并指定conda环境
+        } else {
+            vscode.window.showErrorMessage('Cannot run Python script: Python version not found for the selected Conda environment.');
+        }
     });
 
     let disposableCompleteImports = vscode.commands.registerCommand('extension.completeImports', completeImports);

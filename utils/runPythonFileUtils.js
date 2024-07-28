@@ -127,8 +127,26 @@ async function getCondaEnvironments() {
         });
     });
 }
+
+async function getPythonVersion(condaEnv) {
+    console.log(condaEnv);
+    return new Promise((resolve, reject) => {
+        exec(`conda run -n ${condaEnv} python --version`, (error, stdout, stderr) => {
+            if (error) {
+                // vscode.window.showErrorMessage(`Python not found on env "${condaEnv}"`);
+                reject(stderr);
+            } else {
+                const version = stdout || stderr; // python --version output can be in stdout or stderr
+                resolve(version.trim().split(' ')[1]);
+            }
+        });
+    });
+}
+
+
 module.exports = {
     executeRunPythonAndHandleErrors,
     testpython,
-    getCondaEnvironments
+    getCondaEnvironments,
+    getPythonVersion
 }
