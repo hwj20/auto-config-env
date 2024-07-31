@@ -4,7 +4,7 @@
 1. revise prompt(1)
 2. create conda env (1)
 3. file: pip install pacakges -> window -> run or not (2)
-4. new logo
+4. new logo (2)
 
 
 

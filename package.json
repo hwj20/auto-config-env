@@ -17,17 +17,29 @@
     "commands": [
       {
         "command": "extension.autoConfig",
-        "title": "Auto Config"
+        "title": "Auto Config",
+        "icon": {
+                    "light": "resources/light/autoconfig-light.png",
+                    "dark": "resources/dark/autoconfig-dark.png"
+                }
       },
       
       {
         "command": "extension.runPythonAndHandleErrors",
-        "title": "Environment Debug"
+        "title": "Environment Debug",
+        "icon": {
+                    "light": "resources/light/debug-light.png",
+                    "dark": "resources/dark/debug-dark.png"
+                }
       },
       
       {
           "command": "extension.completeImports",
-          "title": "Complete Imports"
+          "title": "Complete Imports",
+        "icon": {
+                    "light": "resources/light/add-light.png",
+                    "dark": "resources/dark/add-dark.png"
+                }
       },
       {
         "command": "extension.generateRequirements",

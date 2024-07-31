@@ -144,6 +144,12 @@ async function activate(context) {
     statusBarItem.command = 'extension.selectCondaEnv';
     context.subscriptions.push(statusBarItem);
     await updateStatusBar();
+    
+    // addImportStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    // addImportStatusBarItem.text = `$(add) Add Imports`;
+    // addImportStatusBarItem.command = 'extension.completeImports';
+    // context.subscriptions.push(addImportStatusBarItem);
+    // addImportStatusBarItem.show();
 
     let disposableSelectCondaEnv = vscode.commands.registerCommand('extension.selectCondaEnv', selectCondaEnv);
     context.subscriptions.push(disposableSelectCondaEnv);
@@ -248,63 +254,63 @@ async function activate(context) {
 }
 
 
-function getWebviewContent(condaEnvironments) {
-    const options = condaEnvironments.map(env => `<option value="${env}">${env}</option>`).join('');
-    return `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Run Script</title>
-            <style>
-            .full-width-button {
-                width: 90%;
-                background-color: #0078D4;
-                color: white;
-                border: none;
-                padding: 7px 0px;
-                font-size: 12px;
-                cursor: pointer;
-                margin: 7px;
-                border-radius: 2px; /* Round */
-                font-family: Arial;
-            }
-            </style>
-        </head>
-        <body>
-            <label for="condaEnv">Select Conda Environment:</label>
-            <select id="condaEnv">
-                ${options}
-            </select>
-            <button onclick="refreshCondaEnv()" class="full-width-button">Refresh Conda Env List</button>
-            <button onclick="runScript()" class="full-width-button">Run Python Script</button>
-            <button onclick="completeImports()" class="full-width-button">Complete Imports</button>
-            <button onclick="generateRequirements()" class="full-width-button">Generate requirements.txt</button>
-            <!--  <button onclick="addNewCondaEnv(" class="full-width-button">Add new CondaEnv</button> -->
-            <script>
-                const vscode = acquireVsCodeApi();
-                function runScript() {
-                    const condaEnv = document.getElementById('condaEnv').value;
-                    vscode.postMessage({ command: 'runScript', condaEnv: condaEnv } );
-                }
-                function completeImports() {
-                    const condaEnv = document.getElementById('condaEnv').value;
-                    vscode.postMessage({ command: 'completeImports', condaEnv: condaEnv } );
-                }
-                function generateRequirements() {
-                    const condaEnv = document.getElementById('condaEnv').value;
-                    vscode.postMessage({ command: 'generateRequirements', condaEnv: condaEnv  });
-                }
-                function refreshCondaEnv() {
-                    const condaEnv = document.getElementById('condaEnv').value;
-                    vscode.postMessage({ command: 'refreshCondaEnv', condaEnv: condaEnv  });
-                }
-            </script>
-        </body>
-        </html>
-    `;
-}
+// function getWebviewContent(condaEnvironments) {
+//     const options = condaEnvironments.map(env => `<option value="${env}">${env}</option>`).join('');
+//     return `
+//         <!DOCTYPE html>
+//         <html lang="en">
+//         <head>
+//             <meta charset="UTF-8">
+//             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//             <title>Run Script</title>
+//             <style>
+//             .full-width-button {
+//                 width: 90%;
+//                 background-color: #0078D4;
+//                 color: white;
+//                 border: none;
+//                 padding: 7px 0px;
+//                 font-size: 12px;
+//                 cursor: pointer;
+//                 margin: 7px;
+//                 border-radius: 2px; /* Round */
+//                 font-family: Arial;
+//             }
+//             </style>
+//         </head>
+//         <body>
+//             <label for="condaEnv">Select Conda Environment:</label>
+//             <select id="condaEnv">
+//                 ${options}
+//             </select>
+//             <button onclick="refreshCondaEnv()" class="full-width-button">Refresh Conda Env List</button>
+//             <button onclick="runScript()" class="full-width-button">Run Python Script</button>
+//             <button onclick="completeImports()" class="full-width-button">Complete Imports</button>
+//             <button onclick="generateRequirements()" class="full-width-button">Generate requirements.txt</button>
+//             <!--  <button onclick="addNewCondaEnv(" class="full-width-button">Add new CondaEnv</button> -->
+//             <script>
+//                 const vscode = acquireVsCodeApi();
+//                 function runScript() {
+//                     const condaEnv = document.getElementById('condaEnv').value;
+//                     vscode.postMessage({ command: 'runScript', condaEnv: condaEnv } );
+//                 }
+//                 function completeImports() {
+//                     const condaEnv = document.getElementById('condaEnv').value;
+//                     vscode.postMessage({ command: 'completeImports', condaEnv: condaEnv } );
+//                 }
+//                 function generateRequirements() {
+//                     const condaEnv = document.getElementById('condaEnv').value;
+//                     vscode.postMessage({ command: 'generateRequirements', condaEnv: condaEnv  });
+//                 }
+//                 function refreshCondaEnv() {
+//                     const condaEnv = document.getElementById('condaEnv').value;
+//                     vscode.postMessage({ command: 'refreshCondaEnv', condaEnv: condaEnv  });
+//                 }
+//             </script>
+//         </body>
+//         </html>
+//     `;
+// }
 
 function deactivate() {}
 
