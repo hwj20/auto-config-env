@@ -105,7 +105,7 @@ async function testpython(){
     }
         try {
             const res = await runPythonFile(filePath,"base");
-            vscode.window.showInformationMessage('Python script ran successfully.'+res);
+            vscode.window.showInformationMessage('Python script ran successfully. Output:'+res);
             return;
         } catch (error) {
             vscode.window.showErrorMessage(`failed: ${error}`);
@@ -148,5 +148,6 @@ module.exports = {
     executeRunPythonAndHandleErrors,
     testpython,
     getCondaEnvironments,
+    runCommand,
     getPythonVersion
 }

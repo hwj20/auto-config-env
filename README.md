@@ -1,7 +1,10 @@
 # auto-config-env README
 
 ## TODOList:
-1. revise prompt
+1. revise prompt(1)
+2. create conda env (1)
+3. file: pip install pacakges -> window -> run or not (2)
+4. new logo
 
 
 

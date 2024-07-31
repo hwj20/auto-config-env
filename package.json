@@ -9,14 +9,22 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "*"
+  ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "extension.runPythonAndHandleErrors",
-        "title": "Auto Run"
+        "command": "extension.autoConfig",
+        "title": "Auto Config"
       },
+      
+      {
+        "command": "extension.runPythonAndHandleErrors",
+        "title": "Environment Debug"
+      },
+      
       {
           "command": "extension.completeImports",
           "title": "Complete Imports"
@@ -29,6 +37,11 @@
     
       "menus": {
         "editor/title": [
+            {
+                "command": "extension.autoConfig",
+                "when": "resourceExtname == .py",
+                "group": "navigation"
+            },
             {
                 "command": "extension.runPythonAndHandleErrors",
                 "when": "resourceExtname == .py",

@@ -1,12 +1,55 @@
 const vscode = require('vscode');
 const {executeRunPythonAndHandleErrors,testpython,getCondaEnvironments,getPythonVersion} = require('./utils/runPythonFileUtils')
-const {generateRequirements} = require('./utils/createRequirementUtils')
+const {generateRequirements,getPackageAndInstall} = require('./utils/createRequirementUtils')
 const {completeImports} = require('./utils/addImportsUtils')
+const { exec } = require('child_process');
+
 
 let selectedCondaEnv = 'base';
 let selectedPythonVersion = '';
 let statusBarItem;
 let isPythonVersionValid = false;
+
+
+async function createNewCondaEnv() {
+    const envName = await vscode.window.showInputBox({
+        prompt: 'Enter name for new Conda environment',
+        placeHolder: 'my_new_env'
+    });
+
+    if (!envName) {
+        vscode.window.showErrorMessage('Environment name is required to create a new Conda environment.');
+        return null;
+    }
+
+    const pythonVersion = await vscode.window.showQuickPick(
+        ['3.6', '3.7', '3.8', '3.9', '3.10','3.11','3.12'],
+        { placeHolder: 'Select Python version for the new environment' }
+    );
+
+    if (!pythonVersion) {
+        vscode.window.showErrorMessage('Python version is required to create a new Conda environment.');
+        return null;
+    }
+
+    try {
+        await new Promise((resolve, reject) => {
+            exec(`conda create -n ${envName} python=${pythonVersion} -y`, (error, stdout, stderr) => {
+                if (error) {
+                    reject(stderr);
+                } else {
+                    resolve(stdout);
+                }
+            });
+        });
+        vscode.window.showInformationMessage(`Conda environment '${envName}' created successfully.`);
+        return envName;
+    } catch (error) {
+        vscode.window.showErrorMessage(`Failed to create Conda environment: ${error}`);
+        return null;
+    }
+}
+
 
 async function updateStatusBar() {
     try{
@@ -22,21 +65,81 @@ async function updateStatusBar() {
     }
 }
 
-
 async function selectCondaEnv() {
-    const condaEnvironments = await getCondaEnvironments();
+    let condaEnvironments = await getCondaEnvironments();
+    condaEnvironments.push('Create new environment...');
+
     const selectedEnv = await vscode.window.showQuickPick(condaEnvironments, {
         placeHolder: 'Select Conda Environment',
     });
-    if (selectedEnv) {
+
+    if (selectedEnv === 'Create new environment...') {
+        const newEnvName = await createNewCondaEnv();
+        if (newEnvName) {
+            selectedCondaEnv = newEnvName;
+            await updateStatusBar();
+        }
+    } else if (selectedEnv) {
         selectedCondaEnv = selectedEnv;
-        updateStatusBar();
+        await updateStatusBar();
     }
 }
 
 
+// async function showCustomMessageBox(context, message) {
+//     const panel = vscode.window.createWebviewPanel(
+//         'customMessageBox',
+//         'Confirmation',
+//         vscode.ViewColumn.One,
+//         { enableScripts: true }
+//     );
+
+//     panel.webview.html = getWebviewContentWindow(message);
+
+//     return new Promise((resolve) => {
+//         panel.webview.onDidReceiveMessage(
+//             message => {
+//                 switch (message.command) {
+//                     case 'yes':
+//                         resolve('Yes');
+//                         panel.dispose();
+//                         break;
+//                     case 'no':
+//                         resolve('No');
+//                         panel.dispose();
+//                         break;
+//                 }
+//             },
+//             undefined,
+//             context.subscriptions
+//         );
+//     });
+// }
+
+// function getWebviewContentWindow(message) {
+//     return `
+//         <!DOCTYPE html>
+//         <html lang="en">
+//         <head>
+//             <meta charset="UTF-8">
+//             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//             <title>Confirmation</title>
+//         </head>
+//         <body>
+//             <h1>${message}</h1>
+//             <button onclick="sendMessage('yes')">Yes</button>
+//             <button onclick="sendMessage('no')">No</button>
+//             <script>
+//                 const vscode = acquireVsCodeApi();
+//                 function sendMessage(command) {
+//                     vscode.postMessage({ command: command });
+//                 }
+//             </script>
+//         </body>
+//         </html>
+//     `;
+// }
 async function activate(context) {
-    await selectCondaEnv();
     statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
     statusBarItem.command = 'extension.selectCondaEnv';
     context.subscriptions.push(statusBarItem);
@@ -45,11 +148,49 @@ async function activate(context) {
     let disposableSelectCondaEnv = vscode.commands.registerCommand('extension.selectCondaEnv', selectCondaEnv);
     context.subscriptions.push(disposableSelectCondaEnv);
 
+    let disposableAutoConfig = vscode.commands.registerCommand('extension.autoConfig', async() => {
+        if (isPythonVersionValid) {
+            try{
+                await getPackageAndInstall(selectedPythonVersion,selectedCondaEnv);
+                
+                const userChoice = await vscode.window.showQuickPick(
+                    ['Yes', 'No'], 
+                    {
+                        placeHolder: 'Config Finished. Do you wish to run the program?',
+                        canPickMany: false
+                    }
+                );
+                // const userChoice = await showCustomMessageBox(context, 'Do you want to run the program?');
+
+                // const userChoice = await vscode.window.showInformationMessage(
+                //     'Do you want to run the program?',
+                //     { modal: true },
+                //     'Yes',
+                //     'No'
+                // );
+
+                if (userChoice === 'Yes') {
+                    await executeRunPythonAndHandleErrors(3, selectedCondaEnv); // 设置循环次数为3次，并指定conda环境
+                } else {
+                    vscode.window.showInformationMessage('Program execution cancelled.');
+                }
+                
+            }
+            catch(error){
+                vscode.window.showErrorMessage('Error:'+ error);
+            }
+        } else {
+            await selectCondaEnv();
+            vscode.window.showErrorMessage('Cannot run Python script: Python version not found for the selected Conda environment.');
+        }
+    });
+
 
     let disposableRunPython = vscode.commands.registerCommand('extension.runPythonAndHandleErrors', async() => {
         if (isPythonVersionValid) {
             await executeRunPythonAndHandleErrors(3, selectedCondaEnv); // 设置循环次数为3次，并指定conda环境
         } else {
+            await selectCondaEnv();
             vscode.window.showErrorMessage('Cannot run Python script: Python version not found for the selected Conda environment.');
         }
     });
@@ -59,7 +200,7 @@ async function activate(context) {
     let disposableGenerateRequirements = vscode.commands.registerCommand('extension.generateRequirements', async (uri) => {
         if (uri) {
             const folderPath = uri.fsPath;
-            await generateRequirements(folderPath);
+            await generateRequirements(folderPath,selectedPythonVersion);
         } else {
             vscode.window.showErrorMessage('No folder selected');
         }
@@ -69,35 +210,37 @@ async function activate(context) {
     context.subscriptions.push(disposableRunPython);
     context.subscriptions.push(disposableCompleteImports);
     context.subscriptions.push(disposableGenerateRequirements);
+    context.subscriptions.push(disposableAutoConfig);
+    
 
-    const myProvider = {
-        async resolveWebviewView(webviewView) {
-            webviewView.webview.options = {
-                enableScripts: true,
-            };
+    // const myProvider = {
+    //     async resolveWebviewView(webviewView) {
+    //         webviewView.webview.options = {
+    //             enableScripts: true,
+    //         };
 
-            const condaEnvironments = await getCondaEnvironments();
-            webviewView.webview.html = getWebviewContent(condaEnvironments);
-            // webviewView.webview.html = getWebviewContent([]);
+    //         const condaEnvironments = await getCondaEnvironments();
+    //         webviewView.webview.html = getWebviewContent(condaEnvironments);
+    //         // webviewView.webview.html = getWebviewContent([]);
 
-            webviewView.webview.onDidReceiveMessage(async (message) => {
-                switch (message.command) {
-                    case 'runScript':
-                        vscode.commands.executeCommand('extension.runPythonAndHandleErrors',message.condaEnv);
-                        return;
-                    case 'completeImports':
-                        vscode.commands.executeCommand('extension.completeImports');
-                        return;
-                    case 'generateRequirements':
-                        vscode.commands.executeCommand('extension.generateRequirements');
-                        return;
-                    case 'refreshCondaEnv':
-                        const condaEnvironments = await getCondaEnvironments();
-                        webviewView.webview.html = getWebviewContent(condaEnvironments);
-                }
-            });
-        }
-    };
+    //         webviewView.webview.onDidReceiveMessage(async (message) => {
+    //             switch (message.command) {
+    //                 case 'runScript':
+    //                     vscode.commands.executeCommand('extension.runPythonAndHandleErrors',message.condaEnv);
+    //                     return;
+    //                 case 'completeImports':
+    //                     vscode.commands.executeCommand('extension.completeImports');
+    //                     return;
+    //                 case 'generateRequirements':
+    //                     vscode.commands.executeCommand('extension.generateRequirements');
+    //                     return;
+    //                 case 'refreshCondaEnv':
+    //                     const condaEnvironments = await getCondaEnvironments();
+    //                     webviewView.webview.html = getWebviewContent(condaEnvironments);
+    //             }
+    //         });
+    //     }
+    // };
 
     // context.subscriptions.push(
     //     vscode.window.registerWebviewViewProvider('view.autorun', myProvider)
