@@ -1,4 +1,4 @@
-# auto-config-env README
+# auto-config-env 
 
 ## IMPORTANT
 This plugin uses pip to install packages within a Conda environment, defaulting to the *base* environment. 
