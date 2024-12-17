@@ -1,9 +1,12 @@
 # auto-config-env README
 
+## IMPORTANT
+This plugin uses pip to install packages within a Conda environment, defaulting to the *base* environment. 
+After the plugin is deployed, please select the corresponding Conda environment or create a new environment from the bottom-right corner.
 ## Features
-1. Complete Imports.
-2. Auto Config.
-3. Environment Debug.
+1. Complete Imports: Completes imports in a single Python file.
+2. Auto Config:  Utilizes a large language model to automatically install Python packages with pip.
+3. Environment Debug: Automatically runs the Python file. If errors occur, the large language model suggests how to set up the environment and executes the returned commands. The debug loop runs up to 3 times.
 4. Generate requirements.txt (Explore Folder). **Warning**: This operation will generate and **replace** the `requirements.txt` file in the selected folder for `.py` files in all subdirectories.
 
 <!-- 
@@ -42,7 +45,7 @@ Add a `.autoconfig-config` file in the root directory with the following content
 ```
 
 ## Notes
-- The extension has not been tested on Windows, because the path of Python interperter in Windows is magical and so does it in conda envs.
+- The extension has not been tested on Windows, so there might be some bugs there.
 
 
 
@@ -67,3 +70,5 @@ Let me know if there's anything else you'd like to add or change!
 <!-- ## Release Notes -->
 
 
+## TODO
+<!-- Json {"id","header","filename","去掉header的code",project:"[path]content\n\n\n [path]|content"} -->
