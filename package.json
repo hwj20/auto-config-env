@@ -3,6 +3,7 @@
   "displayName": "auto_config_env",
   "description": "An extension to auto config environment of python project with LLMs.",
   "publisher": "WanjingHuang",
+  "icon": "resources/light/autoconfig-light.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/hwj20/auto-config-env"
