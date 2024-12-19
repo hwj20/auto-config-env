@@ -8,7 +8,4 @@ vsc-extension-quickstart.md
 **/*.map
 **/.eslintrc.json
 **/.vscode-test.*
-node_modules/
-!node_modules/openai/
-!node_modules/axios/
 
