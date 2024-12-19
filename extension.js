@@ -1,3 +1,9 @@
+try {
+  const openai = require('openai');
+} catch (err) {
+  console.error("Failed to load 'openai' module:", err);
+}
+
 const vscode = require('vscode');
 const {executeRunPythonAndHandleErrors,testpython,getCondaEnvironments,getPythonVersion} = require('./utils/runPythonFileUtils')
 const {generateRequirements,getPackageAndInstall} = require('./utils/createRequirementUtils')
