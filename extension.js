@@ -147,7 +147,7 @@ async function selectCondaEnv() {
 // }
 async function activate(context) {
     statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    statusBarItem.command = 'extension.selectCondaEnv';
+    statusBarItem.command = 'auto_config_env.selectCondaEnv';
     context.subscriptions.push(statusBarItem);
     await updateStatusBar();
     
@@ -157,10 +157,10 @@ async function activate(context) {
     // context.subscriptions.push(addImportStatusBarItem);
     // addImportStatusBarItem.show();
 
-    let disposableSelectCondaEnv = vscode.commands.registerCommand('extension.selectCondaEnv', selectCondaEnv);
+    let disposableSelectCondaEnv = vscode.commands.registerCommand('auto_config_env.selectCondaEnv', selectCondaEnv);
     context.subscriptions.push(disposableSelectCondaEnv);
 
-    let disposableAutoConfig = vscode.commands.registerCommand('extension.autoConfig', async() => {
+    let disposableAutoConfig = vscode.commands.registerCommand('auto_config_env.autoConfig', async() => {
         if (isPythonVersionValid) {
             try{
                 await getPackageAndInstall(selectedPythonVersion,selectedCondaEnv);
@@ -198,7 +198,7 @@ async function activate(context) {
     });
 
 
-    let disposableRunPython = vscode.commands.registerCommand('extension.runPythonAndHandleErrors', async() => {
+    let disposableRunPython = vscode.commands.registerCommand('auto_config_env.runPythonAndHandleErrors', async() => {
         if (isPythonVersionValid) {
             await executeRunPythonAndHandleErrors(3, selectedCondaEnv); // 设置循环次数为3次，并指定conda环境
         } else {
@@ -207,9 +207,9 @@ async function activate(context) {
         }
     });
 
-    let disposableCompleteImports = vscode.commands.registerCommand('extension.completeImports', completeImports);
+    let disposableCompleteImports = vscode.commands.registerCommand('auto_config_env.completeImports', completeImports);
 
-    let disposableGenerateRequirements = vscode.commands.registerCommand('extension.generateRequirements', async (uri) => {
+    let disposableGenerateRequirements = vscode.commands.registerCommand('auto_config_env.generateRequirements', async (uri) => {
         if (uri) {
             const folderPath = uri.fsPath;
             await generateRequirements(folderPath,selectedPythonVersion);

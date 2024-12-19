@@ -36,11 +36,14 @@ run it with F5 in vscode.
 - Conda
 
 ## Configuration
-Add a `.autoconfig-config` file in the root directory with the following content in JSON format:
+Open VSCode.
+Navigate to File > Preferences > Settings (or press Ctrl + , / Cmd + ,).
+Search for myExtension.openaiApiKey and enter your API key in the input box.
+Alternatively, you can directly edit the settings.json file:
 
 ```json
 {
-    "api_key": "Your OpenAI Key"
+    "auto_config_env.openaiApiKey": "Your OpenAI Key"
 }
 ```
 
@@ -70,5 +73,5 @@ Let me know if there's anything else you'd like to add or change!
 <!-- ## Release Notes -->
 
 
-## TODO
+<!-- ## TODO -->
 <!-- Json {"id","header","filename","去掉header的code",project:"[path]content\n\n\n [path]|content"} -->

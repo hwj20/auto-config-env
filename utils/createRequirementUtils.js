@@ -1,14 +1,22 @@
 const vscode = require('vscode');
 const { OpenAI } = require('openai');
-const {loadConfig} = require('./configUtils')
+// const {loadConfig} = require('./configUtils')
+// config = loadConfig();
 const fs = require('fs');
 const path = require('path');
 const {runCommand} = require('./runPythonFileUtils')
 
-config = loadConfig();
+const apiKey = vscode.workspace.getConfiguration('auto_config_env').get('openaiApiKey');
+
+if (!apiKey) {
+    throw new Error("API Key is not configured in settings.json");
+}
+
+
 const openai = new OpenAI({
-  apiKey:  config.api_key,
+  apiKey:  apiKey,
 });
+
 
 function getAllPythonFiles(dirPath, arrayOfFiles = []) {
     const files = fs.readdirSync(dirPath);
