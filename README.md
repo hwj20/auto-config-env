@@ -54,7 +54,9 @@ Alternatively, you can directly edit the workspace settings (by Ctrl + p and sea
 
 ## Extension Settings
 
-Not yet.
+This extension contributes the following settings:
+
+* "auto_config_env.openaiApiKey": "Your OpenAI Key"
 
 <!-- Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
 
