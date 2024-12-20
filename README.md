@@ -40,7 +40,7 @@ Open VSCode.
 
 Navigate to File > Preferences > Settings (or press Ctrl + , / Cmd + ,).
 Search for "auto_config_env" and enter your API key in the input box.
-Alternatively, you can directly edit the workspace settings (by Ctrl + p and search "Preference:Open Workspace Setting") with:
+Alternatively, you can directly edit the workspace settings (by Ctrl + Shift + p and search "Preference:Open Workspace Setting") with:
 
 ```json
 {
@@ -76,5 +76,5 @@ Let me know if there's anything else you'd like to add or change!
 
 
 ## TODO
-Update a choice to choose the LLM model and include other LLMs like claude.
+Support other LLMs like claude. 
 <!-- Json {"id","header","filename","去掉header的code",project:"[path]content\n\n\n [path]|content"} -->

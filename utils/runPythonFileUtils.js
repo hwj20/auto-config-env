@@ -3,6 +3,7 @@ const { exec } = require('child_process');
 const vscode = require('vscode');
 // const {loadConfig} = require('./configUtils')
 // config = loadConfig();
+const gpt_model =  vscode.workspace.getConfiguration('auto_config_env').get('gpt_model');
 const apiKey = vscode.workspace.getConfiguration('auto_config_env').get('openaiApiKey');
 
 if (!apiKey) {
@@ -33,7 +34,7 @@ async function handleError(error) {
          Note: sudo command cannot be used.The given programming environment configuration problem is: ${error}Please write programming commands that can solve the above problems. \
          Respond only with a string in the following JSON format:{\"commands\": output string}`;
         const response = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo-1106', // 或 'gpt-4' 如果你有访问权限
+            model: gpt_model, // 或 'gpt-4' 如果你有访问权限
             messages: [{role: "user", content: prompt_get_cmd}],
         });
         cmd =  JSON.parse(response.choices[0].message.content).commands

@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/hwj20/auto-config-env"
   },
-  "version": "1.0.10",
+  "version": "1.0.11",
   "engines": {
     "vscode": "^1.91.0"
   },
@@ -86,7 +86,13 @@
                   "type": "string",
                   "default": "",
                   "description": "Your OpenAI API Key"
-              }
+              },
+              "auto_config_env.gpt_model": {
+                    "type": "string",
+                    "default": "gpt-3.5-turbo-1106",
+                    "description": "Choose the default OpenAI model."
+                }
+              
           }
         }
   },

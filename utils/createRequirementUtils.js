@@ -6,16 +6,15 @@ const fs = require('fs');
 const path = require('path');
 const {runCommand} = require('./runPythonFileUtils')
 
+const gpt_model =  vscode.workspace.getConfiguration('auto_config_env').get('gpt_model');
 const apiKey = vscode.workspace.getConfiguration('auto_config_env').get('openaiApiKey');
-
 if (!apiKey) {
     throw new Error("API Key is not configured in settings.json");
 }
-
-
 const openai = new OpenAI({
   apiKey:  apiKey,
 });
+
 
 
 function getAllPythonFiles(dirPath, arrayOfFiles = []) {
@@ -84,7 +83,7 @@ Do not include explanations, comments, or any other text in the output.
 // `The python version is ${pythonVersion}`;
     try {
         const response = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo-1106', // 或 'gpt-4' 如果你有访问权限
+            model: gpt_model, // 或 'gpt-4' 如果你有访问权限
             messages: [{role: "user", content: prompt_get_requirements}],
         });
         rawOutput = response.choices[0].message.content;
@@ -157,7 +156,7 @@ Do not include explanations, comments, or any other text in the output.
 
     try {
         const response = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo-1106', // 或 'gpt-4' 如果你有访问权限
+            model: gpt_model, // 或 'gpt-4' 如果你有访问权限
             messages: [{role: "user", content: prompt_get_requirements}],
         });
         rawOutput = response.choices[0].message.content;
