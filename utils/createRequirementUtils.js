@@ -66,6 +66,7 @@ async function getPackageAndInstall(pythonVersion,condaEnv){
             combinedContent += `\n\n# File: ${file}\n${imports}`;
         }
         else{
+            
             const content = fs.readFileSync(file, 'utf8');
             combinedContent += `\n\n# File: ${file}\n${content}`;
         }
@@ -77,14 +78,23 @@ async function getPackageAndInstall(pythonVersion,condaEnv){
     }
     const prompt_get_requirements = `As an experienced Python programming expert proficient in solving programming environment configuration issues, please help me set up a specified programming environment on an Ubuntu system. I have lost the Python project's requirements.txt file but can provide the content of all Python files in the project as strings. Based on the import statements and other possible clues in these files, help me identify the external libraries the project depends on and create a requirements.txt file that will allow the project to run smoothly. Please try to identify and provide specific library version requirements; if it's not possible to determine the exact versions, at least provide the names of the libraries. Note that Python's standard library is pre-installed, so there's no need to list modules from the standard library. Here is the content of my project files:${combinedContent} \
 Respond only with a string in the following JSON format: \
-{\"requirement\": output string(without version)}`;
+{\"requirements_txt\": output string(without version)}
+Do not include explanations, comments, or any other text in the output.
+`;
 // `The python version is ${pythonVersion}`;
     try {
         const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo-1106', // 或 'gpt-4' 如果你有访问权限
             messages: [{role: "user", content: prompt_get_requirements}],
         });
-        const requirementsContent =  JSON.parse(response.choices[0].message.content).requirement;
+        rawOutput = response.choices[0].message.content;
+        // 使用正则表达式提取 JSON 部分
+        const jsonMatch = rawOutput.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+            throw new Error("Invalid JSON format in the response.");
+        }
+        const requirementsContent =  JSON.parse(jsonMatch[0]).requirements_txt;
+
         if (requirementsContent == null){
             vscode.window.showInformationMessage("No packages need to install");
             return;
@@ -140,7 +150,9 @@ async function generateRequirements(dirPath, pythonVersion) {
     }
     const prompt_get_requirements = `As an experienced Python programming expert proficient in solving programming environment configuration issues, please help me set up a specified programming environment on an Ubuntu system. I have lost the Python project's requirements.txt file but can provide the content of all Python files in the project as strings. Based on the import statements and other possible clues in these files, help me identify the external libraries the project depends on and create a requirements.txt file that will allow the project to run smoothly. Please try to identify and provide specific library version requirements; if it's not possible to determine the exact versions, at least provide the names of the libraries. Note that Python's standard library is pre-installed, so there's no need to list modules from the standard library. Here is the content of my project files:${combinedContent} \
 Respond only with a string in the following JSON format: \
-{\"requirement\": output string(without version)}`;
+{\"requirements_txt\": output string(without version)}
+Do not include explanations, comments, or any other text in the output.
+`;
 // `The python version is ${pythonVersion}`;
 
     try {
@@ -148,7 +160,13 @@ Respond only with a string in the following JSON format: \
             model: 'gpt-3.5-turbo-1106', // 或 'gpt-4' 如果你有访问权限
             messages: [{role: "user", content: prompt_get_requirements}],
         });
-        const requirementsContent =  JSON.parse(response.choices[0].message.content).requirement
+        rawOutput = response.choices[0].message.content;
+        // 使用正则表达式提取 JSON 部分
+        const jsonMatch = rawOutput.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+            throw new Error("Invalid JSON format in the response.");
+        }
+        const requirementsContent =  JSON.parse(jsonMatch[0]).requirements_txt;
         const requirementsPath = path.join(dirPath, 'requirements.txt');
         fs.writeFileSync(requirementsPath, requirementsContent);
 

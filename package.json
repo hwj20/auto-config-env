@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/hwj20/auto-config-env"
   },
-  "version": "1.0.5",
+  "version": "1.0.9",
   "engines": {
     "vscode": "^1.91.0"
   },
@@ -106,7 +106,6 @@
   },
   "dependencies": {
     "axios": "^1.7.2",
-    "openai": "^4.52.7",
-    "node-fetch": "^3.3.0" 
+    "openai": "^4.52.7"
   }
 }

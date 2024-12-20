@@ -32,14 +32,15 @@ run it with F5 in vscode.
 
 
 ## Requirements
-- OpenAI key
+- OpenAI key (Current model: gpt-3.5-turbo-1106)
 - Conda
 
 ## Configuration
 Open VSCode.
+
 Navigate to File > Preferences > Settings (or press Ctrl + , / Cmd + ,).
-Search for myExtension.openaiApiKey and enter your API key in the input box.
-Alternatively, you can directly edit the settings.json file:
+Search for "auto_config_env" and enter your API key in the input box.
+Alternatively, you can directly edit the workspace settings (by Ctrl + p and search "Preference:Open Workspace Setting") with:
 
 ```json
 {
@@ -48,8 +49,7 @@ Alternatively, you can directly edit the settings.json file:
 ```
 
 ## Notes
-- The extension has not been tested on Windows, so there might be some bugs there.
-
+- The extension is designed for Ubuntu and not tested on Windows.
 
 
 ## Extension Settings
@@ -73,5 +73,6 @@ Let me know if there's anything else you'd like to add or change!
 <!-- ## Release Notes -->
 
 
-<!-- ## TODO -->
+## TODO
+Update a choice to choose the LLM model and include other LLMs like claude.
 <!-- Json {"id","header","filename","去掉header的code",project:"[path]content\n\n\n [path]|content"} -->
