@@ -3,12 +3,12 @@
   "displayName": "auto_config_env",
   "description": "An extension to auto config environment of python project with LLMs.",
   "publisher": "WanjingHuang",
-  "icon": "resources/light/autoconfig-light.png",
+  "icon": "resources/logo.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/hwj20/auto-config-env"
   },
-  "version": "1.0.15",
+  "version": "1.0.16",
   "engines": {
     "vscode": "^1.91.0"
   },
