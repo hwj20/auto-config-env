@@ -65,7 +65,6 @@ async function getPackageAndInstall(pythonVersion,condaEnv){
             combinedContent += `\n\n# File: ${file}\n${imports}`;
         }
         else{
-            
             const content = fs.readFileSync(file, 'utf8');
             combinedContent += `\n\n# File: ${file}\n${content}`;
         }
@@ -75,10 +74,16 @@ async function getPackageAndInstall(pythonVersion,condaEnv){
         vscode.window.showErrorMessage('No import statements found in Python files');
         return;
     }
-    const prompt_get_requirements = `As an experienced Python programming expert proficient in solving programming environment configuration issues, please help me set up a specified programming environment on an Ubuntu system. I have lost the Python project's requirements.txt file but can provide the content of all Python files in the project as strings. Based on the import statements and other possible clues in these files, help me identify the external libraries the project depends on and create a requirements.txt file that will allow the project to run smoothly. Please try to identify and provide specific library version requirements; if it's not possible to determine the exact versions, at least provide the names of the libraries. Note that Python's standard library is pre-installed, so there's no need to list modules from the standard library. Here is the content of my project files:${combinedContent} \
-Respond only with a string in the following JSON format: \
-{\"requirements_txt\": output string(without version)}
-Do not include explanations, comments, or any other text in the output.
+    const prompt_get_requirements = `
+    As an experienced Python programming expert proficient in solving programming environment configuration issues, please analyze the following Python project files provided as strings. Based on the import statements and other clues, identify the external libraries the project depends on. Then, generate a \`requirements.txt\` file containing the names of the libraries (without version numbers). Do not include Python's standard library.
+
+Respond **only** with a valid JSON object in the following format (no additional text or comments):
+{
+  "requirements_txt": "library1\\nlibrary2\\nlibrary3"
+}
+
+Here is the content of the project files:
+${combinedContent}
 `;
 // `The python version is ${pythonVersion}`;
     try {
@@ -90,7 +95,7 @@ Do not include explanations, comments, or any other text in the output.
         // 使用正则表达式提取 JSON 部分
         const jsonMatch = rawOutput.match(/\{[\s\S]*\}/);
         if (!jsonMatch) {
-            throw new Error("Invalid JSON format in the response.");
+            throw new Error("Invalid JSON format in the response: "+rawOutput);
         }
         const requirementsContent =  JSON.parse(jsonMatch[0]).requirements_txt;
 
@@ -147,10 +152,16 @@ async function generateRequirements(dirPath, pythonVersion) {
         vscode.window.showErrorMessage('No import statements found in Python files');
         return;
     }
-    const prompt_get_requirements = `As an experienced Python programming expert proficient in solving programming environment configuration issues, please help me set up a specified programming environment on an Ubuntu system. I have lost the Python project's requirements.txt file but can provide the content of all Python files in the project as strings. Based on the import statements and other possible clues in these files, help me identify the external libraries the project depends on and create a requirements.txt file that will allow the project to run smoothly. Please try to identify and provide specific library version requirements; if it's not possible to determine the exact versions, at least provide the names of the libraries. Note that Python's standard library is pre-installed, so there's no need to list modules from the standard library. Here is the content of my project files:${combinedContent} \
-Respond only with a string in the following JSON format: \
-{\"requirements_txt\": output string(without version)}
-Do not include explanations, comments, or any other text in the output.
+    const prompt_get_requirements = `
+As an experienced Python programming expert proficient in solving programming environment configuration issues, please analyze the following Python project files provided as strings. Based on the import statements and other clues, identify the external libraries the project depends on. Then, generate a \`requirements.txt\` file containing the names of the libraries (without version numbers). Do not include Python's standard library.
+
+Respond **only** with a valid JSON object in the following format (no additional text or comments):
+{
+  "requirements_txt": "library1\\nlibrary2\\nlibrary3"
+}
+
+Here is the content of the project files:
+${combinedContent}
 `;
 // `The python version is ${pythonVersion}`;
 
@@ -163,7 +174,7 @@ Do not include explanations, comments, or any other text in the output.
         // 使用正则表达式提取 JSON 部分
         const jsonMatch = rawOutput.match(/\{[\s\S]*\}/);
         if (!jsonMatch) {
-            throw new Error("Invalid JSON format in the response.");
+            throw new Error("Invalid JSON format in the response: "+rawOutput);
         }
         const requirementsContent =  JSON.parse(jsonMatch[0]).requirements_txt;
         const requirementsPath = path.join(dirPath, 'requirements.txt');
