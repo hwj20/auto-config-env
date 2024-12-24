@@ -40,13 +40,6 @@ Open VSCode.
 
 Navigate to File > Preferences > Settings (or press Ctrl + , / Cmd + ,).
 Search for "auto_config_env" and enter your API key in the input box.
-Alternatively, you can directly edit the workspace settings (by Ctrl + Shift + p and search "Preference:Open Workspace Setting") with:
-
-```json
-{
-    "auto_config_env.openaiApiKey": "Your OpenAI Key"
-}
-```
 
 ## Notes
 - The extension is designed for Ubuntu and not tested on Windows.
