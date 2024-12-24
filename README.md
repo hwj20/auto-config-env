@@ -1,7 +1,7 @@
 # auto-config-env 
 
 ## IMPORTANT
-This plugin uses pip to install packages within a Conda environment, defaulting to the *base* environment. 
+This plugin uses *pip* to install packages *within a Conda environment*, defaulting to the *base* environment. 
 After the plugin is deployed, please select the corresponding Conda environment or create a new environment from the bottom-right corner.
 ## Features
 1. Complete Imports: Completes imports in a single Python file.
