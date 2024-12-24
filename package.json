@@ -8,16 +8,18 @@
     "type": "git",
     "url": "https://github.com/hwj20/auto-config-env"
   },
-  "version": "1.0.14",
+  "version": "1.0.15",
   "engines": {
     "vscode": "^1.91.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "*"
-  ],
+"activationEvents": [
+    "onLanguage:python",
+    "workspaceContains:pyrightconfig.json"
+],
+
   "main": "./extension.js",
   "contributes": {
     "commands": [
