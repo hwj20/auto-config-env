@@ -32,7 +32,7 @@ run it with F5 in vscode.
 
 
 ## Requirements
-- OpenAI key (Current model: gpt-3.5-turbo-1106)
+- OpenAI key (Current model: gpt-3.5-turbo-1106, you can choose prefered model in Settings, but it might lead to errors due to different api.)
 - Conda
 
 ## Configuration
@@ -40,13 +40,6 @@ Open VSCode.
 
 Navigate to File > Preferences > Settings (or press Ctrl + , / Cmd + ,).
 Search for "auto_config_env" and enter your API key in the input box.
-Alternatively, you can directly edit the workspace settings (by Ctrl + Shift + p and search "Preference:Open Workspace Setting") with:
-
-```json
-{
-    "auto_config_env.openaiApiKey": "Your OpenAI Key"
-}
-```
 
 ## Notes
 - The extension is designed for Ubuntu and not tested on Windows.
@@ -57,6 +50,7 @@ Alternatively, you can directly edit the workspace settings (by Ctrl + Shift + p
 This extension contributes the following settings:
 
 * "auto_config_env.openaiApiKey": "Your OpenAI Key"
+* "auto_config_env.gpt_model": "gpt-3.5-turbo-1106" or other models(without tests)
 
 <!-- Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
 
