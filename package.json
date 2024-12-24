@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/hwj20/auto-config-env"
   },
-  "version": "1.0.12",
+  "version": "1.0.13",
   "engines": {
     "vscode": "^1.91.0"
   },
