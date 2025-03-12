@@ -6,7 +6,7 @@ After the plugin is deployed, please select the corresponding Conda environment 
 ## Features
 1. Complete Imports: Completes imports in a single Python file.
 2. Auto Config:  Utilizes a large language model to automatically install Python packages with pip.
-3. Environment Debug: Automatically runs the Python file. If errors occur, the large language model suggests how to set up the environment and executes the returned commands. The debug loop runs up to 3 times.
+3. Environment Debug（RECOMMENDED）: Automatically runs the Python file. If errors occur, the large language model suggests how to set up the environment and executes the returned commands. The debug loop runs up to 3 times.
 4. Generate requirements.txt (Explore Folder). **Warning**: This operation will generate and **replace** the `requirements.txt` file in the selected folder for `.py` files in all subdirectories.
 
 <!-- 
