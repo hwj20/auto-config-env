@@ -165,26 +165,41 @@ ${combinedContent}
 `;
 // `The python version is ${pythonVersion}`;
 
-    try {
-        const response = await openai.chat.completions.create({
-            model: gpt_model, // 或 'gpt-4' 如果你有访问权限
-            messages: [{role: "user", content: prompt_get_requirements}],
-        });
-        rawOutput = response.choices[0].message.content;
-        // 使用正则表达式提取 JSON 部分
-        const jsonMatch = rawOutput.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) {
-            throw new Error("Invalid JSON format in the response: "+rawOutput);
-        }
-        const requirementsContent =  JSON.parse(jsonMatch[0]).requirements_txt;
-        const requirementsPath = path.join(dirPath, 'requirements.txt');
-        fs.writeFileSync(requirementsPath, requirementsContent);
-
-        vscode.window.showInformationMessage('requirements.txt generated successfully.');
-    } catch (err) {
-        vscode.window.showErrorMessage('Error communicating with OpenAI: ' + err);
-        throw err;
+ try {
+    const response = await openai.chat.completions.create({
+        model: gpt_model, // 或 'gpt-4' 如果你有访问权限
+        messages: [{ role: "user", content: prompt_get_requirements }],
+    });
+    const rawOutput = response.choices[0].message.content;
+    // 使用正则表达式提取 JSON 部分
+    const jsonMatch = rawOutput.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+        throw new Error("Invalid JSON format in the response: " + rawOutput);
     }
+
+    const requirementsContent = JSON.parse(jsonMatch[0]).requirements_txt;
+    const requirementsPath = path.join(dirPath, 'requirements.txt');
+
+    // 如果已有 requirements.txt，先备份
+    if (fs.existsSync(requirementsPath)) {
+        const timestamp = new Date()
+            .toISOString()          // e.g. "2025-06-26T15:30:45.123Z"
+            .replace(/[:.]/g, '-')  // 替换冒号和点，变为 "2025-06-26T15-30-45-123Z"
+            .replace('T', '_')      // 变为 "2025-06-26_15-30-45-123Z"
+            .replace('Z', '');
+        const backupName = `requirements_${timestamp}.txt`;
+        const backupPath = path.join(dirPath, backupName);
+        fs.copyFileSync(requirementsPath, backupPath);
+    }
+
+    // 写入新的 requirements.txt
+    fs.writeFileSync(requirementsPath, requirementsContent);
+
+    vscode.window.showInformationMessage('requirements.txt generated successfully.');
+} catch (err) {
+    vscode.window.showErrorMessage('Error communicating with OpenAI: ' + err);
+    throw err;
+}
 }
 
 module.exports = {

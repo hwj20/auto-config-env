@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/hwj20/auto-config-env"
   },
-  "version": "1.0.16",
+  "version": "1.1.0",
   "engines": {
     "vscode": "^1.91.0"
   },
@@ -25,63 +25,61 @@
     "commands": [
       {
         "command": "auto_config_env.autoConfig",
-        "title": "Auto Install Requirements",
+        "title": "Auto: Install Requirements",
         "icon": {
-                    "light": "resources/light/Import-light.png",
-                    "dark": "resources/dark/Import-dark.png"
-                }
+          "light": "resources/light/Import-light.png",
+          "dark": "resources/dark/Import-dark.png"
+        }
       },
-      
       {
         "command": "auto_config_env.runPythonAndHandleErrors",
-        "title": "Environment Debug",
+        "title": "Auto: Environment Debug",
         "icon": {
-                    "light": "resources/light/autoconfig-light.png",
-                    "dark": "resources/dark/autoconfig-dark.png"
-                }
+          "light": "resources/light/autoconfig-light.png",
+          "dark": "resources/dark/autoconfig-dark.png"
+        }
       },
-      
       {
-          "command": "auto_config_env.completeImports",
-          "title": "Complete Imports",
+        "command": "auto_config_env.completeImports",
+        "title": "Auto: complete imports",
         "icon": {
-                    "light": "resources/light/generate-import-light.png",
-                    "dark": "resources/dark/generate-import-dark.png"
-                }
+          "light": "resources/light/generate-import-light.png",
+          "dark": "resources/dark/generate-import-dark.png"
+        }
       },
       {
         "command": "auto_config_env.generateRequirements",
-        "title": "Genearte Requirements.txt"
+        "title": "Auto: Generate Requirements.txt"
       }
     ],
-    
-      "menus": {
-        "editor/title": [
-            {
-                "command": "auto_config_env.autoConfig",
-                "when": "resourceExtname == .py",
-                "group": "navigation"
-            },
-            {
-                "command": "auto_config_env.runPythonAndHandleErrors",
-                "when": "resourceExtname == .py",
-                "group": "navigation"
-            },
-            {
-                "command": "auto_config_env.completeImports",
-                "when": "resourceExtname == .py",
-                "group": "navigation"
-            }            
-        ],
-        "explorer/context": [
-            {
-                "command": "auto_config_env.generateRequirements",
-                "when": "explorerResourceIsFolder",
-                "group": "navigation"
-            }
-        ]
-    },
-          "configuration": {
+    "menus": {
+      "editor/title": [
+        {
+            "command": "auto_config_env.runPythonAndHandleErrors",
+            "when": "resourceExtname == .py",
+            "group": "navigation"
+        }        
+      ],
+      "editor/context": [
+        {
+          "command": "auto_config_env.completeImports",
+          "when": "resourceExtname == .py",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "auto_config_env.generateRequirements",
+          "when": "explorerResourceIsFolder",
+          "group": "navigation"
+        },
+        {
+          "command": "auto_config_env.autoConfig",
+          "when": "explorerResourceIsFolder",
+          "group": "navigation"
+        }
+      ]},
+      "configuration": {
           "type": "object",
           "properties": {
               "auto_config_env.openaiApiKey": {
