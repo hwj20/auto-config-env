@@ -1,5 +1,11 @@
 # auto config env 
 
+## Demo Video
+EN: [VSCode Extension: Let GPT config your python environment.] https://youtu.be/Be3Vl3ay0m0
+
+
+CN: 【VSCode 插件: 让 GPT 替你配置 python 环境】 https://www.bilibili.com/video/BV156KBzwEjX
+
 ## IMPORTANT
 This plugin uses **pip** to install packages **within a Conda environment**, defaulting to the *base* environment. 
 After the plugin is deployed, please select the corresponding Conda environment or create a new environment from the bottom-right corner.
@@ -71,5 +77,10 @@ Let me know if there's anything else you'd like to add or change!
 
 ## TODO
 Support other LLMs like claude. 
+
+Remove reduncdant Tokens and avoid large files.(To save your money hehe)(v1.0.1)
+
+Change the order of ops in menus to prevent mistouching.(v1.1.1)
+
 Auto delete same Imports after "Auto: Install".(But I'm not very sure. Deleting users' contents is a very sensitive operation, although they are redundant.)
 <!-- Json {"id","header","filename","去掉header的code",project:"[path]content\n\n\n [path]|content"} -->

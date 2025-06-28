@@ -64,7 +64,11 @@ async function getPackageAndInstall(pythonVersion,condaEnv){
             const imports = extractImports(file);
             combinedContent += `\n\n# File: ${file}\n${imports}`;
         }
-        else{
+        else if (
+            file.endsWith('.yaml') ||
+            file.endsWith('.yml') ||
+            file.includes('requirement')   // to match requirements.txt
+        ) {
             const content = fs.readFileSync(file, 'utf8');
             combinedContent += `\n\n# File: ${file}\n${content}`;
         }
